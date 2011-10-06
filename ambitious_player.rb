@@ -15,7 +15,15 @@ class AmbitiousPlayer
     ]
   end
 
-  def look_for(ship_length)
+  def take_turn(board, ships_remaining)
+    self.board = board
+    self.ships_remaining = ships_remaining
+    
+    return sink! || hunt!
+  end
+
+  private
+  def sink!
     board.each_with_index do |row, y| # do we need this looping, or just use an array searcher?
       row.each_with_index do |state, x|
         next unless state == :hit
@@ -42,53 +50,32 @@ class AmbitiousPlayer
         end
 
         # west
-        if row[x-1] == :unknown
+        if (x-1) >= 0 and row[x-1] == :unknown
           puts "w"
           return [x-1, y]
-        end
-        
+        end     
       end
+      
+
     end
+    nil
   end
   
-  def take_turn(board, ships_remaining)
-    self.board = board
-    self.ships_remaining = ships_remaining
+  def generate_move
+    # determine best direction to proceed - could randomise initially, or just always go across
+    # transpose if direction is :down?
+    # find the first :unknown in this direction
+    # hit space which is (:unknown + (smallest_remaining -1))
+    # eg :unknown is position 0 and destroyer exists, hit 1
+    # eg :unknown is position 2 and frigate exists, hit 4
     
-    return look_for(smallest_ship_remaining)
-
-    board.each_with_index do |row, y|
-      row.each_with_index do |state, x|
-
-
-
-
-
-
-        # next if s == :miss
-        # 
-        # if s == :hit
-        #   if dir == :up
-        #     
-        #   else
-        #     return []
-        #   end
-        #   
-        # end
-
-        next unless state == :unknown
-        # log("going with it!")
-        return [x, y]
-      end
-    end
-  end
-
-  private
-  def direction(state) # should use state!
-    dir = rand(2) == 1 ? :down : :across
+    [rand(board.size), rand(board.size)]
   end
   
-  def smallest_ship_remaining
-    smallest_ship_remaining = ships_remaining.sort.first
+  def hunt!
+    move = generate_move
+    
+    return move if board[move[1]][move[0]] == :unknown # this won't be necessary once generate move is smarter - put all logic in to this method :)
+    return hunt!
   end
 end
