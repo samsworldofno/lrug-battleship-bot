@@ -21,61 +21,146 @@ class AmbitiousPlayer
     
     return sink! || hunt!
   end
-
+  
   private
+  def space_exists(x, y)
+    return false if y > (board.size - 1)
+    return false if x > (board.size - 1)
+    return false if x < 0
+    return false if y < 0
+
+    true
+  end
+  
+  def is_space?(x, y, status)
+    return false unless space_exists(x, y)
+    return true if board[y][x] == status
+
+    false
+  end
+  
+  def unknown?(x, y)
+    is_space?(x, y, :unknown)
+  end
+  
+  def hit?(x, y)
+    is_space?(x, y, :hit)
+  end
+  
+  def sunk?(x, y)
+    false
+  end
+  
   def sink!
     board.each_with_index do |row, y| # do we need this looping, or just use an array searcher?
       row.each_with_index do |state, x|
-        next unless state == :hit
-
-        puts y
-
-        # north
-        if (y-1) >= 0 and board[y-1][x] == :unknown
-          puts "n"
-
-          return [x, y-1]
+        next unless hit?(x, y)
+        
+        next if sunk?(x, y)
+        
+        if hit?(x, y + 1) and unknown?(x, y - 1)
+          puts "n (h)"
+          return [x, y - 1]
         end
 
-        # east
-        if row[x+1] == :unknown
-          puts "e"
-          return [x+1, y]
+        if hit?(x - 1, y) and unknown?(x + 1, y)
+          puts "e (h)"
+          return [x + 1, y]
+        end
+        
+        if hit?(x, y - 1) and unknown?(x, y + 1)
+          puts "s (h)"
+          return [x, y + 1]
         end
 
-        # south
-        if board[y+1] and board[y+1][x] == :unknown
-          puts "s"
-          return [x, y+1]
+        if hit?(x + 1, y) and unknown?(x - 1, y)
+          puts "w (h)"
+          return [x - 1, y]
         end
-
-        # west
-        if (x-1) >= 0 and row[x-1] == :unknown
-          puts "w"
-          return [x-1, y]
-        end     
       end
-      
-
     end
+
+    board.each_with_index do |row, y|
+      row.each_with_index do |state, x|
+        next unless state == :hit
+   
+        # turn this into an array of possible moves, then iterate
+        # need to DRY up this block with the one above
+        
+        north = [x, y -1]
+        if unknown?(*north) and big_enough?(*north)
+          puts "n"
+          return north
+        end
+        
+        if unknown?(x + 1, y)
+          puts "e"
+          return [x + 1, y]
+        end
+        
+        if unknown?(x, y + 1)
+          puts "s"
+          return [x, y + 1]
+        end
+        
+        if unknown?(x - 1, y)
+          puts "e"
+          return [x - 1, y]
+        end
+      end
+    end
+
     nil
   end
   
-  def generate_move
-    # determine best direction to proceed - could randomise initially, or just always go across
-    # transpose if direction is :down?
-    # find the first :unknown in this direction
-    # hit space which is (:unknown + (smallest_remaining -1))
-    # eg :unknown is position 0 and destroyer exists, hit 1
-    # eg :unknown is position 2 and frigate exists, hit 4
+  def big_enough?(x, y)
+    return true # remove this!
     
-    [rand(board.size), rand(board.size)]
+    surroundings(x, y).each do |move|
+      return false unless unknown?(*move)
+    end
+    
+    true
   end
   
+  def surroundings(x, y)
+    {
+      :north => [x, y - 1],
+      :east  => [x + 1, y],
+      :south => [x, y + 1],
+      :west  => [x - 1, y]
+    }.values
+  end
+  
+  
+  def generate_move      
+    board.each_with_index do |row, y|
+      row.each_with_index do |state, x|
+        next unless state == :unknown
+
+        if x == 0 and y.even?
+          interval = 0
+        else
+          interval = (smallest_ship_remaining.to_f/2).ceil
+        end        
+        
+        return [x + interval, y] if unknown?(x + interval, y)
+      end
+    end
+    
+    [rand(board.size), rand(board.size)] # fallback
+  end
+  
+  def smallest_ship_remaining
+    ships_remaining.sort.first
+  end
+    
   def hunt!
     move = generate_move
     
-    return move if board[move[1]][move[0]] == :unknown # this won't be necessary once generate move is smarter - put all logic in to this method :)
+    puts "hunting!"
+
+    return move if unknown?(*move)
     return hunt!
   end
 end
