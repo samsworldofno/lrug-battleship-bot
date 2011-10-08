@@ -1,20 +1,32 @@
-require File.join(File.dirname(__FILE__), 'lib', 'player_please')
+# encoding: utf-8
 
-class CheekyPlayer
-  include PlayerPlease
-  
+class CheekyPlayer  
   def name
     "Cheeky Player"
   end
   
-  def new_game
+  def boards
     [
-      [2, 2, 5, :down],
-      [5, 1, 4, :across],
-      [0, 9, 3, :across],
-      [5, 3, 3, :down],
-      [5, 7, 2, :down]
+      [
+        [2, 2, 5, :down],
+        [5, 1, 4, :across],
+        [0, 9, 3, :across],
+        [5, 3, 3, :down],
+        [5, 7, 2, :down]
+      ],
+      [
+        [2, 2, 5, :down],
+        [5, 1, 4, :across],
+        [0, 9, 3, :across],
+        [5, 3, 3, :down],        
+        [0, 0, 2, :across]
+      ]
     ]
+    
+  end
+  
+  def new_game
+    boards.last
   end
   
   def take_turn(board, ships_remaining)
