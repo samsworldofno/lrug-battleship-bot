@@ -37,15 +37,12 @@ class Board
       
       if space.y == 0 or space.north.try(:shot_at?)
         interval += (smallest_ship_remaining.to_f/2).ceil
-      # elsif 
-        # interval += 1
-      #   interval = (smallest_ship_remaining.to_f/2).ceil
       end
-      
+    
       move = find(space.x + interval, space.y)
       next if move.nil?
       
-      return move if move.active? and move.surroundings_clear?
+      return move if move.active?
     end
     
     random_unknown_move
