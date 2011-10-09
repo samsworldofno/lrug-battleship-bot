@@ -40,6 +40,18 @@ describe AmbitiousPlayer do
       ships_remaining = [5,4,3]    
       player.take_turn(board, ships_remaining).should == [3,0]
     end
+
+    it "should find the first unknown space and hit (space + (smallest_ship/2)) - example 4" do
+      board = [
+        [:miss,     :miss,    :hit,     :hit],
+        [:unknown,  :miss,    :unknown, :miss],
+        [:unknown,  :unknown, :miss,    :unknown],
+        [:unknown,  :unknown, :unknown, :unknown]
+      ]
+      
+      ships_remaining = [5,4,3]    
+      player.take_turn(board, ships_remaining).should == [0,2]
+    end
     
     it "should start in the top left corner" do
       board = [
@@ -183,7 +195,7 @@ describe AmbitiousPlayer do
         [:unknown, :miss, :miss, :unknown]
       ]
       
-      player.take_turn(board, ships_remaining).should == [1,0]
+      player.take_turn(board, ships_remaining).should == [0,1]
     end
 
     it "should follow the direction of the boat - example 7" do

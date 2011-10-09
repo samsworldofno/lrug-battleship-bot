@@ -17,6 +17,10 @@ class Space
   def active?
     unknown? and surroundings_clear?
   end
+  
+  def shot_at?
+    hit? or miss?
+  end
 
   def hit?
     status == :hit
@@ -31,6 +35,9 @@ class Space
   end
 
   def isolated_hit?
+    # easily confused by boats touching each other...
+    return false unless self.hit?
+    
     surroundings.compact.each do |space|
       return false if space.hit?
     end
@@ -58,9 +65,7 @@ class Space
     [north, east, south, west].compact
   end
 
-  private  
   def surroundings_clear?
-    return true
     surroundings.each do |space|
       return true if space.unknown? or space.isolated_hit? 
     end

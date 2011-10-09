@@ -42,8 +42,9 @@ class Board
       end
       
       move = find(space.x + interval, space.y)
+      next if move.nil?
       
-      return move if move.try(:active?)
+      return move if move.active? and move.surroundings_clear?
     end
     
     random_unknown_move
