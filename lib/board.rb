@@ -76,7 +76,7 @@ class Board
     true
   end
   
-  def find_all(criteria)
+  def find_all(criteria)    
     rows.reduce([]) do |hits, row|
       hits += row.find_all(&criteria)
       hits

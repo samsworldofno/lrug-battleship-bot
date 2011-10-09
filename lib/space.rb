@@ -60,6 +60,7 @@ class Space
 
   private  
   def surroundings_clear?
+    return true
     surroundings.each do |space|
       return true if space.unknown? or space.isolated_hit? 
     end

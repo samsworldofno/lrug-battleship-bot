@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require './ambitious_player'
+require File.join(File.dirname(__FILE__), '..', 'ambitious_player')
 
 describe AmbitiousPlayer do
   let(:player)          { AmbitiousPlayer.new }
@@ -173,6 +173,28 @@ describe AmbitiousPlayer do
       ]
       
       player.take_turn(board, ships_remaining).should == [0,1]
+    end
+    
+    it "should follow the direction of the boat - example 6" do
+      board = [
+        [:miss, :hit, :unknown, :unknown],
+        [:unknown, :hit, :miss, :unknown],
+        [:hit, :hit, :miss, :unknown],
+        [:unknown, :miss, :miss, :unknown]
+      ]
+      
+      player.take_turn(board, ships_remaining).should == [1,0]
+    end
+
+    it "should follow the direction of the boat - example 7" do
+      board = [
+        [:miss, :hit, :unknown, :unknown],
+        [:hit, :hit, :miss, :unknown],
+        [:miss, :hit, :miss, :unknown],
+        [:hit, :miss, :miss, :unknown]
+      ]
+      
+      player.take_turn(board, ships_remaining).should == [1,0]
     end
 
     it "should not fire into a space too small for any boat remaining" do
