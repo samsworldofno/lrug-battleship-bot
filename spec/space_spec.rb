@@ -1,8 +1,11 @@
 # encoding: utf-8
 
-require File.join(File.dirname(__FILE__), '..', 'lib', 'object')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'board')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'space')
+$: << File.expand_path("lib", File.dirname(__FILE__))
+
+require 'object'
+require 'board'
+require 'space'
+
 
 describe Space do
 

@@ -36,7 +36,7 @@ class Board
       interval = 0
       
       if space.y == 0 or space.north.try(:shot_at?)
-        interval += (smallest_ship_remaining.to_f/2).ceil
+        interval += smallest_ship_remaining - 1
       end
     
       move = find(space.x + interval, space.y)
@@ -91,7 +91,9 @@ class Board
   end
   
   def random_unknown_move
-    find_all(:active?).shuffle.first    
+    find_all(:active?).shuffle.each do |move|
+      return move unless move.north.try(:shot_at?)
+    end
   end
   
   def smallest_ship_remaining

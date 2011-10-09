@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+$: << File.expand_path("lib", File.dirname(__FILE__))
+
 require 'object'
 require 'board'
 require 'space'
