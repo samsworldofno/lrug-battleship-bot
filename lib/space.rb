@@ -38,9 +38,27 @@ class Space
     # easily confused by boats touching each other...
     return false unless self.hit?
     
-    surroundings.compact.each do |space|
+    s = {
+      :north => north,
+      :east => east,
+      :south => south,
+      :west => west
+      
+    }
+    
+    s.each do |direction, space|
+      next if space.nil?
+      
+      return false if space.hit? and space.try(direction).try(:shot_at?)
+      return true if space.unknown? and (space.try(direction).try(:hit?))
+      
       return false if space.hit?
+      
     end
+    
+    # surroundings.compact.each do |space|
+    #   return false if space.hit?
+    # end
     
     true
   end

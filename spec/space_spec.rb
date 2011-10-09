@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require File.join(File.dirname(__FILE__), '..', 'lib', 'object')
 require File.join(File.dirname(__FILE__), '..', 'lib', 'board')
 require File.join(File.dirname(__FILE__), '..', 'lib', 'space')
 
@@ -37,7 +38,7 @@ describe Space do
   
   it "should identify a hit that is not yet part of a sunk ship - example 3" do
     state = [
-      [:miss,     :hit,   :unknown, :unknown],
+      [:hit,     :hit,   :unknown, :unknown],
       [:unknown,  :hit,   :miss,    :unknown],
       [:hit,      :hit,   :miss,    :unknown],
       [:unknown,  :miss,  :miss,    :unknown]

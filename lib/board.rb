@@ -35,10 +35,11 @@ class Board
     unknowns.each do |space|
       interval = 0
       
-      if space.y == 0 and space.x.odd?
-        interval = (smallest_ship_remaining.to_f/2).ceil
-      elsif space.north.try(:unknown?) == false
-        interval = (smallest_ship_remaining.to_f/2).ceil
+      if space.y == 0 or space.north.try(:shot_at?)
+        interval += (smallest_ship_remaining.to_f/2).ceil
+      # elsif 
+        # interval += 1
+      #   interval = (smallest_ship_remaining.to_f/2).ceil
       end
       
       move = find(space.x + interval, space.y)
