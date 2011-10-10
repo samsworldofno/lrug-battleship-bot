@@ -38,15 +38,7 @@ class Space
     # easily confused by boats touching each other...
     return false unless self.hit?
     
-    s = {
-      :north => north,
-      :east => east,
-      :south => south,
-      :west => west
-      
-    }
-    
-    s.each do |direction, space|
+    surroundings_hash.each do |direction, space|
       next if space.nil?
       
       return false if space.hit? and space.try(direction).try(:shot_at?)
@@ -55,10 +47,6 @@ class Space
       return false if space.hit?
       
     end
-    
-    # surroundings.compact.each do |space|
-    #   return false if space.hit?
-    # end
     
     true
   end
@@ -80,7 +68,17 @@ class Space
   end
 
   def surroundings
-    [north, east, south, west].compact
+    surroundings_hash.values.compact
+  end
+  
+  def surroundings_hash
+    {
+      :north => north,
+      :east => east,
+      :south => south,
+      :west => west
+      
+    }    
   end
 
   def surroundings_clear?
